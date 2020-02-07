@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 .login-container {
   height: 100%;
   background: linear-gradient(
@@ -24,10 +24,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
-}
-.login-container .left-box {
-  width: 478px;
-  height: 550px;
-  background-color: #F5F5F5;
+
+  .left-box {
+    width: 478px;
+    height: 550px;
+    background-color: #f5f5f5;
+  }
 }
 </style>
