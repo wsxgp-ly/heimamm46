@@ -1,5 +1,7 @@
 <template>
-  <router-link to="路由连接">路由连接</router-link>
+ <div>
+    <el-button type="primary">主要按钮</el-button>
+ </div>
 </template>
 
 <script>
