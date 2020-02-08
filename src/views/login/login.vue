@@ -12,13 +12,13 @@
       </div>
       <div class="content">
         <!-- 表单 -->
-        <el-form ref="form" :model="loginForm" label-width="42px">
+        <el-form ref="loginform" :rules="rules" :model="loginForm" label-width="42px">
           <!-- 手机号 -->
           <el-form-item>
             <el-input v-model="loginForm.user" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
           <!-- 密码 -->
-          <el-form-item>
+          <el-form-item prop="password">
             <el-input
               v-model="loginForm.password"
               show-password
@@ -27,7 +27,7 @@
             ></el-input>
           </el-form-item>
           <!-- 验证码 -->
-          <el-form-item>
+          <el-form-item prop="loginCode">
             <el-row>
               <el-col :span="17">
                 <el-input
@@ -50,7 +50,7 @@
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button class="mybut" type="primary">登录</el-button>
+            <el-button class="mybut" type="primary" @click="submitForm('loginform')">登录</el-button>
             <el-button class="mybut" type="primary">注册</el-button>
           </el-form-item>
         </el-form>
@@ -75,8 +75,40 @@ export default {
         loginCode: "",
         // 勾选框
         ischeckout: false
+      },
+      // 效验规则
+      rules:{
+        password:[
+          {required:true, message:'密码不能为空', trigger:'blur'},
+          {min:6, max:12, message:'密码长度为6-12位', trigger:'blur'}
+        ],
+        loginCode:[
+           {required:true, message:'验证码不能为空', trigger:'blur'},
+          {min:4, max:4, message:'密码长度为4位', trigger:'blur'}
+        ]
       }
     };
+  },
+  // 方法
+  methods: {
+    // 提交表单
+    submitForm(formName) {
+        // 上面传入的 formName是 loginform
+        // $refs作用是 获取 页面中使用ref标记的元素
+        // 等同于 this.$refs['loginform'] 相当于获取到了Element-ui的表单
+        // this.$refs['loginform'] 等同于 this.$refs.loginform
+        // validate这个方法是Element-ui的表单的方法
+        this.$refs[formName].validate((valid) => {
+            if (valid) {
+               this.$message.success('验证成功')
+                // 验证正确
+            } else {
+                this.$message.error('验证失败')
+                // 验证错误
+                return false;
+            }
+        });
+    }
   }
 };
 </script>
