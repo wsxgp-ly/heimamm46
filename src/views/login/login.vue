@@ -141,6 +141,12 @@ export default {
     width: 100%;
     height: 41px;
   }
+  .el-checkbox {
+    display: flex;
+    .el-checkbox__label {
+      display: flex;
+    }
+  }
 
 }
 </style>
