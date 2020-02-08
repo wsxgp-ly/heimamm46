@@ -11,35 +11,42 @@
         <span class="sub_title">用户登录</span>
       </div>
       <div class="content">
-        <el-form ref="form" :model="form" label-width="42px">
+        <!-- 表单 -->
+        <el-form ref="form" :model="loginForm" label-width="42px">
+          <!-- 手机号 -->
           <el-form-item >
-            <el-input  v-model="form.user" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
+            <el-input  v-model="loginForm.user" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
+          <!-- 密码 -->
           <el-form-item>
             <el-input
-              v-model="form.password"
+              v-model="loginForm.password"
               show-password
               placeholder="请输入密码"
               prefix-icon="el-icon-lock"
             ></el-input>
           </el-form-item>
+          <!-- 验证码 -->
           <el-form-item>
-            <el-col :span="15">
-              <el-input v-model="form.yanzheng" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
-              
+            <el-row>
+              <el-col :span="17">
+              <el-input v-model="loginForm.loginCode" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
             </el-col>
+            <el-col :span="7">
+              <img class="login-code" src="../../assets/login_captcha.png" alt="">
+            </el-col>
+            </el-row>
           </el-form-item>
+          <!-- 用户协议 -->
           <el-form-item>
-            <el-checkbox-group v-model="form.checkout">
-              <el-checkbox name="type">
+              <el-checkbox v-model="loginForm.ischeckout">
                 我已阅读并同意
                 <el-link type="primary">用户协议</el-link>和
                 <el-link type="primary">隐私条款</el-link>
               </el-checkbox>
-            </el-checkbox-group>
           </el-form-item>
           <el-form-item>
-            <el-button class="mybut" type="primary" @click="onSubmit">登录</el-button>
+            <el-button class="mybut" type="primary" >登录</el-button>
             <el-button class="mybut" type="primary">注册</el-button>
           </el-form-item>
         </el-form>
@@ -54,21 +61,20 @@ export default {
   name: "login",
   data() {
     return {
-      form: {
+      // /数据
+      loginForm: {
+        // 用户名
         user: "",
+        // 密码
         password: "",
-        yanzheng: "",
-        checkout: false,
-        resource: "",
-        desc: ""
+        // 验证码
+        loginCode: "",
+        // 勾选框
+        ischeckout: false,
       }
     };
   },
-  methods: {
-      onSubmit() {
-        window.console.log('submit!');
-      }
-    }
+  
 };
 </script>
 
@@ -89,6 +95,8 @@ export default {
     width: 478px;
     height: 550px;
     background-color: #f5f5f5;
+    padding-right: 41px;
+    box-sizing: border-box;
     .title_box {
       display: flex;
       align-items: center;
@@ -116,8 +124,7 @@ export default {
     .content {
       width: 100%;
       margin-top: 29px;
-      .el-form-item__content {
-          width: 394px;
+      
           .imgs{
               width: 100px;
               height: 40px;
@@ -128,7 +135,11 @@ export default {
           margin-bottom: 25px;
         }
       }
-    }
+  }
+  // 登录验证码
+  .login-code {
+    width: 100%;
+    height: 41px;
   }
 
 }
