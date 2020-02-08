@@ -36,7 +36,7 @@
                   prefix-icon="el-icon-key"
                 ></el-input>
               </el-col>
-              <el-col :span="7">
+              <el-col :span="7" class="code-col">
                 <img class="login-code" src="../../assets/login_captcha.png" alt />
               </el-col>
             </el-row>
@@ -176,8 +176,12 @@ export default {
       width: 100%;
       height: 41px;
     }
+    // 验证码的栅格容器 调整高度
+    .code-col{
+      height: 41px;
+    }
   }
-
+  // 用户协议部分对齐
   .el-checkbox {
     display: flex;
     align-items: center;
