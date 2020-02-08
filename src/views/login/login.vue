@@ -73,6 +73,7 @@ export default {
 </script>
 
 <style lang="less">
+// 大盒子
 .login-container {
   height: 100%;
   background: linear-gradient(
@@ -83,7 +84,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
-
+// 左侧盒子
   .left-box {
     width: 478px;
     height: 550px;
