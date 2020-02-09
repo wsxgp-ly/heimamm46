@@ -1,17 +1,17 @@
 <template>
   <el-dialog center class="register-dialog" width="603px" title="用户注册" :visible.sync="dialogFormVisible">
-    <el-form :model="form">
-      <el-form-item label="昵称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+    <el-form :model="form" :rules="rules" ref="registerForm">
+      <el-form-item label="昵称" prop="username" :label-width="formLabelWidth">
+        <el-input v-model="form.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-input v-model="form.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="手机" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
+        <el-input show-password v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="图形码" :label-width="formLabelWidth">
         <el-row>
@@ -50,7 +50,22 @@ export default {
       dialogFormVisible: false,
     //   表单的数据
       form: {
-        name: ""
+        // 昵称
+        username: "",
+        // 密码
+        password:''
+      },
+      // 效验规则
+      rules:{
+        username:[
+          {required:true, message:'用户名不能为空', trigger:'blur'},
+          {min:6,max:12, message:'用户名长度为6到12位', trigger:'change'},
+        ],
+        password:[
+          {required:true, message:'密码名不能为空', trigger:'blur'},
+          {min:6,max:12, message:'密码名长度为6到12位', trigger:'change'},
+        ]
+
       },
     //   左侧的文本宽度
       formLabelWidth: "62px"
