@@ -24,8 +24,9 @@
           <el-col :span="16">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-col>
+          <!-- 验证码 -->
           <el-col :span="7" :offset="1" class="register-box">
-            <img class="register-code" :src="codeURL" alt />
+            <img class="register-code" :src="codeURL" @click="changeCode" alt />
           </el-col>
         </el-row>
       </el-form-item>
@@ -118,7 +119,15 @@ export default {
       formLabelWidth: "62px",
       codeURL:process.env.VUE_APP_URL+"/captcha?type=sendsms"
     };
-  }
+  },
+  methods: {
+    changeCode(){
+      // 随机数
+      // this.codeURL=process.env.VUE_APP_URL+"/captcha?type=sendsms&"+Math.random()
+      // 时间戳
+      this.codeURL=process.env.VUE_APP_URL+"/captcha?type=sendsms&"+Date.now()
+    }
+  },
 };
 </script>
 
