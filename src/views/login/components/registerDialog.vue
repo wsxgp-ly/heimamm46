@@ -22,7 +22,7 @@
       <el-form-item label="图形码" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="form.code" autocomplete="off"></el-input>
           </el-col>
           <!-- 验证码 -->
           <el-col :span="7" :offset="1" class="register-box">
@@ -35,8 +35,9 @@
           <el-col :span="16">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-col>
+          <!-- 获取手机验证码按钮 -->
           <el-col :span="7" :offset="1">
-            <el-button>点击获取验证码</el-button>
+            <el-button @click="getSMS">点击获取验证码</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 const checkPhone = (rule, value, callback) => {
   // 接收参数 value
   // 定义正则表达式
@@ -92,7 +94,9 @@ export default {
         // 手机
         phone: "",
         //邮箱
-        email: ""
+        email: "",
+        // 手机验证码
+        code:'',
       },
       // 效验规则
       rules: {
@@ -121,6 +125,26 @@ export default {
     };
   },
   methods: {
+    getSMS(){
+      axios({
+        url:process.env.VUE_APP_URL+'/sendsms',
+        method:'post',
+        data: {
+          code:this.form.code,
+          phone:this.form.phone
+        },
+        // 是否跨域携带 cookie   默认是false
+        withCredentials:true
+      }).then(res=>{
+        //成功回调
+        // window.console.log(res)
+        if (res.data.code === 200) {
+          this.$message.success('验证码获取成功'+res.data.data.captcha)
+        } else if(res.data.code === 0) {
+          this.$message.error(res.data.messgae)
+        }
+      });
+    },
     changeCode(){
       // 随机数
       // this.codeURL=process.env.VUE_APP_URL+"/captcha?type=sendsms&"+Math.random()
