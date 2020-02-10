@@ -37,7 +37,7 @@
           </el-col>
           <!-- 获取手机验证码按钮 -->
           <el-col :span="7" :offset="1">
-            <el-button @click="getSMS">点击获取验证码</el-button>
+            <el-button @click="getSMS" :disabled="delay != 0">{{delay == 0 ?'点击获取验证码' : `还有${delay}秒继续获取`}}</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -121,11 +121,27 @@ export default {
       },
       //   左侧的文本宽度
       formLabelWidth: "62px",
-      codeURL:process.env.VUE_APP_URL+"/captcha?type=sendsms"
+      codeURL:process.env.VUE_APP_URL+"/captcha?type=sendsms",
+      delay:0
     };
   },
   methods: {
+    // 点击按钮获取手机验证码 
     getSMS(){
+      // 如果为0开启倒计时
+      if (this.delay==0) {
+        this.delay = 60;
+        const interID = setInterval(() => {
+          // 时间递减
+          this.delay--
+          if (this.delay == 0) {
+            // 清除定时器
+            clearInterval(interID);
+            
+          }
+        }, 100);
+      }
+      // 调用接口
       axios({
         url:process.env.VUE_APP_URL+'/sendsms',
         method:'post',
