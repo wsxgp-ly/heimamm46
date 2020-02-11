@@ -197,7 +197,10 @@ export default {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       // window.console.log(file);
+      // 保存服务器返回的图片地址
       this.form.avatar = res.data.file_path;
+      // 表单中 头像字段的效验
+      this.$refs.registerForm.validateField('avatar')
     },
     // 图像文件上传之前
     beforeAvatarUpload(file) {
