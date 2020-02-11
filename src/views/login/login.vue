@@ -14,8 +14,8 @@
         <!-- 表单 -->
         <el-form ref="loginform" :rules="rules" :model="loginForm" label-width="42px">
           <!-- 手机号 -->
-          <el-form-item>
-            <el-input v-model="loginForm.user" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
+          <el-form-item prop="phone">
+            <el-input v-model="loginForm.phone" placeholder="请输入手机号" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
@@ -65,6 +65,8 @@
 <script>
 // 导入 注册对话框组件
 import registerDialog from './components/registerDialog.vue'
+// 导入效验规则函数
+import {checkPhone} from '@/utils/validator.js'
 export default {
   name: "login",
   components:{
@@ -74,8 +76,8 @@ export default {
     return {
       // /数据
       loginForm: {
-        // 用户名
-        user: "",
+        // 手机号
+        phone: "",
         // 密码
         password: "",
         // 验证码
@@ -85,6 +87,11 @@ export default {
       },
       // 效验规则
       rules:{
+        phone: [
+          { required: true, message: "手机号不能为空", trigger: "blur" },
+          // trigger 触发是执行 validator设置的函数
+          { validator: checkPhone, trigger: "blur" }
+        ],
         password:[
           {required:true, message:'密码不能为空', trigger:'blur'},
           {min:6, max:12, message:'密码长度为6-12位', trigger:'blur'}
