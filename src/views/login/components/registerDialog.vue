@@ -127,6 +127,17 @@ export default {
   methods: {
     // 点击按钮获取手机验证码
     getSMS() {
+      // 手机号效验
+      const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (reg.test(this.form.phone) != true) {
+        this.$message.error('手机号码的格式不对!请重新输入')
+        return
+      }
+      // 图片验证码效验
+      if (this.form.code.length != 4) {
+        this.$message.error('验证码格式不对哦,请检查')
+        return
+      }
       // 如果为0开启倒计时
       if (this.delay == 0) {
         this.delay = 60;
