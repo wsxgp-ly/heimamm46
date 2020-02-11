@@ -36,8 +36,9 @@
                   prefix-icon="el-icon-key"
                 ></el-input>
               </el-col>
+              <!-- 图形验证码 -->
               <el-col :span="7" class="code-col">
-                <img class="login-code" src="../../assets/login_captcha.png" alt />
+                <img class="login-code" @click="changeCode" :src="codeURL" alt />
               </el-col>
             </el-row>
           </el-form-item>
@@ -100,11 +101,16 @@ export default {
            {required:true, message:'验证码不能为空', trigger:'blur'},
           {min:4, max:4, message:'密码长度为4位', trigger:'blur'}
         ]
-      }
+      },
+      codeURL:process.env.VUE_APP_URL+"/captcha?type=login"
     };
   },
   // 方法
   methods: {
+    // 点击刷新验证码
+    changeCode(){
+      this.codeURL = process.env.VUE_APP_URL+"/captcha?type=login&t="+Date.now()
+    },
     // 提交表单
     submitForm(formName) {
         // 上面传入的 formName是 loginform

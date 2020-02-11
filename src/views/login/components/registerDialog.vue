@@ -24,7 +24,7 @@
           <el-col :span="16">
             <el-input v-model="form.code" autocomplete="off"></el-input>
           </el-col>
-          <!-- 验证码 -->
+          <!-- 图形验证码 -->
           <el-col :span="7" :offset="1" class="register-box">
             <img class="register-code" :src="codeURL" @click="changeCode" alt />
           </el-col>
@@ -32,6 +32,7 @@
       </el-form-item>
       <el-form-item label="验证码" :label-width="formLabelWidth">
         <el-row>
+          <!-- 手机验证码输入框 -->
           <el-col :span="16">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-col>
@@ -165,6 +166,7 @@ export default {
         }
       });
     },
+    // 点击图片刷新图形码
     changeCode(){
       // 随机数
       // this.codeURL=process.env.VUE_APP_URL+"/captcha?type=sendsms&"+Math.random()

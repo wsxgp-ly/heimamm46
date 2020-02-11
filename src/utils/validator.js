@@ -1,4 +1,4 @@
-// 验证手机号规则
+//抽取并暴露 验证手机号规则
 export const checkPhone = (rule, value, callback) => {
     // 接收参数 value
     // 定义正则表达式
@@ -13,7 +13,7 @@ export const checkPhone = (rule, value, callback) => {
     }
   };
   
-  // 验证邮箱的 函数
+  // /抽取并暴露 验证邮箱的 函数
   export const checkEmail = (rule, value, callback) => {
     // 接收参数 value
     // 定义正则表达式
