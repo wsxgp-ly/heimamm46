@@ -47,7 +47,7 @@
         <el-row>
           <!-- 手机验证码输入框 -->
           <el-col :span="16">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="form.rcode" autocomplete="off"></el-input>
           </el-col>
           <!-- 获取手机验证码按钮 -->
           <el-col :span="7" :offset="1">
@@ -61,7 +61,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      <el-button type="primary" @click="submitForm('registerForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -70,10 +70,9 @@
 // 导入 axios
 // import axios from "axios";
 // 导入注册接口
-import {sendsms} from '@/api/register.js'
+import { sendsms } from "@/api/register.js";
 // 导入效验规则 函数
 import { checkPhone, checkEmail } from "@/utils/validator.js";
-
 
 export default {
   data() {
@@ -93,14 +92,13 @@ export default {
         // 手机验证码
         code: "",
         // 用户的头像地址
-        avatar:""
+        avatar: "",
+        // 短信验证码
+        rcode: ""
       },
       // 效验规则
       rules: {
-        avatar: [
-          { required: true, message: "头像不能为空", trigger: "blur" },
-         
-        ],
+        avatar: [{ required: true, message: "头像不能为空", trigger: "blur" }],
         username: [
           { required: true, message: "用户名不能为空", trigger: "blur" },
           { min: 6, max: 12, message: "用户名长度为6到12位", trigger: "change" }
@@ -125,24 +123,41 @@ export default {
       codeURL: process.env.VUE_APP_URL + "/captcha?type=sendsms",
       delay: 0,
       // 本地的图片预览地址
-      imageUrl:'',
+      imageUrl: "",
       // 头像上传的接口地址
-      uploadUrl:process.env.VUE_APP_URL  + "/uploads"
+      uploadUrl: process.env.VUE_APP_URL + "/uploads"
     };
   },
   methods: {
+    // 表单提交方法
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$message.success('验证成功');
+          // 验证正确
+        } else {
+          this.$message.error('验证失败')
+          // 验证错误
+          return false;
+        }
+      });
+    },
+    // 重置表单
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     // 点击按钮获取手机验证码
     getSMS() {
       // 手机号效验
       const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
       if (reg.test(this.form.phone) != true) {
-        this.$message.error('手机号码的格式不对!请重新输入')
-        return
+        this.$message.error("手机号码的格式不对!请重新输入");
+        return;
       }
       // 图片验证码效验
       if (this.form.code.length != 4) {
-        this.$message.error('验证码格式不对哦,请检查')
-        return
+        this.$message.error("验证码格式不对哦,请检查");
+        return;
       }
       // 如果为0开启倒计时
       if (this.delay == 0) {
@@ -158,9 +173,9 @@ export default {
       }
       // 调用接口
       sendsms({
-          code: this.form.code,
-          phone: this.form.phone
-        },).then(res => {
+        code: this.form.code,
+        phone: this.form.phone
+      }).then(res => {
         //成功回调
         // window.console.log(res)
         if (res.data.code === 200) {
@@ -180,24 +195,23 @@ export default {
     },
     // 图像文件上传成功
     handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        // window.console.log(file);
-        this.form.avatar = res.data.file_path
+      this.imageUrl = URL.createObjectURL(file.raw);
+      // window.console.log(file);
+      this.form.avatar = res.data.file_path;
+    },
+    // 图像文件上传之前
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
-      },
-      // 图像文件上传之前
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg' || 'image/png' || 'image/gif';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是图片格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是图片格式!");
       }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    }
   }
 };
 </script>
