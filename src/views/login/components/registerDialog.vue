@@ -32,7 +32,7 @@
       <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
         <el-input show-password v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="图形码" :label-width="formLabelWidth">
+      <el-form-item label="图形码" prop="code" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
             <el-input v-model="form.code" autocomplete="off"></el-input>
@@ -43,7 +43,7 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="验证码" :label-width="formLabelWidth">
+      <el-form-item label="验证码" prop="rcode" :label-width="formLabelWidth">
         <el-row>
           <!-- 手机验证码输入框 -->
           <el-col :span="16">
@@ -60,7 +60,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
+      <el-button @click="cancel('registerForm')">取 消</el-button>
       <el-button type="primary" @click="submitForm('registerForm')">确 定</el-button>
     </div>
   </el-dialog>
@@ -130,6 +130,11 @@ export default {
     };
   },
   methods: {
+    // 点击取消清空表单
+    cancel() {
+      // 关闭表单
+      this.dialogFormVisible=false
+    },
     // 表单提交方法
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -137,24 +142,28 @@ export default {
           // this.$message.success('验证成功');
           // 验证正确
           register({
-            username:this.form.username,
-            password:this.form.password,
-            phone:this.form.phone,
-            email:this.form.email,
-            avatar:this.form.avatar,
-            rcode:this.form.rcode
-          }).then(res=>{
+            username: this.form.username,
+            password: this.form.password,
+            phone: this.form.phone,
+            email: this.form.email,
+            avatar: this.form.avatar,
+            rcode: this.form.rcode
+          }).then(res => {
             // window.console.log(res);
             if (res.data.code === 200) {
-              this.$message.success('恭喜你,注册成功啦');
+              this.$message.success("恭喜你,注册成功啦");
               // 关闭对话框
-              this.dialogFormVisible = false
-            } else if(res.data.code === 201) {
-              this.$message.error(res.data.message)
+              this.dialogFormVisible = false;
+              // 清空数据
+              this.$refs[formName].resetFields();
+              // 人为清空图像
+              this.imageUrl = "";
+            } else if (res.data.code === 201) {
+              this.$message.error(res.data.message);
             }
-          })
+          });
         } else {
-          this.$message.error('验证失败')
+          this.$message.error("验证失败");
           // 验证错误
           return false;
         }
@@ -218,7 +227,7 @@ export default {
       // 保存服务器返回的图片地址
       this.form.avatar = res.data.file_path;
       // 表单中 头像字段的效验
-      this.$refs.registerForm.validateField('avatar')
+      this.$refs.registerForm.validateField("avatar");
     },
     // 图像文件上传之前
     beforeAvatarUpload(file) {
