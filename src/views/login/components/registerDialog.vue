@@ -71,6 +71,7 @@
 // import axios from "axios";
 // 导入注册接口
 import { sendsms } from "@/api/register.js";
+import { register } from "@/api/register.js";
 // 导入效验规则 函数
 import { checkPhone, checkEmail } from "@/utils/validator.js";
 
@@ -133,8 +134,25 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message.success('验证成功');
+          // this.$message.success('验证成功');
           // 验证正确
+          register({
+            username:this.form.username,
+            password:this.form.password,
+            phone:this.form.phone,
+            email:this.form.email,
+            avatar:this.form.avatar,
+            rcode:this.form.rcode
+          }).then(res=>{
+            // window.console.log(res);
+            if (res.data.code === 200) {
+              this.$message.success('恭喜你,注册成功啦');
+              // 关闭对话框
+              this.dialogFormVisible = false
+            } else if(res.data.code === 201) {
+              this.$message.error(res.data.message)
+            }
+          })
         } else {
           this.$message.error('验证失败')
           // 验证错误
