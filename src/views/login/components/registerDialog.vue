@@ -68,7 +68,9 @@
 
 <script>
 // 导入 axios
-import axios from "axios";
+// import axios from "axios";
+// 导入注册接口
+import {sendsms} from '@/api/register.js'
 // 导入效验规则 函数
 import { checkPhone, checkEmail } from "@/utils/validator.js";
 
@@ -138,16 +140,10 @@ export default {
         }, 100);
       }
       // 调用接口
-      axios({
-        url: process.env.VUE_APP_URL + "/sendsms",
-        method: "post",
-        data: {
+      sendsms({
           code: this.form.code,
           phone: this.form.phone
-        },
-        // 是否跨域携带 cookie   默认是false
-        withCredentials: true
-      }).then(res => {
+        },).then(res => {
         //成功回调
         // window.console.log(res)
         if (res.data.code === 200) {
