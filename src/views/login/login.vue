@@ -44,7 +44,7 @@
           </el-form-item>
           <!-- 用户协议 -->
           <el-form-item>
-            <el-checkbox v-model="loginForm.ischeckout">
+            <el-checkbox v-model="loginForm.isChecked">
               我已阅读并同意
               <el-link type="primary">用户协议</el-link>和
               <el-link type="primary">隐私条款</el-link>
@@ -68,6 +68,9 @@
 import registerDialog from './components/registerDialog.vue'
 // 导入效验规则函数
 import {checkPhone} from '@/utils/validator.js'
+// 导入登录页面独有的axios 接口
+import {login} from '@/api/login.js'
+
 export default {
   name: "login",
   components:{
@@ -84,7 +87,7 @@ export default {
         // 验证码
         loginCode: "",
         // 勾选框
-        ischeckout: false
+        ischecked: false
       },
       // 效验规则
       rules:{
@@ -122,6 +125,27 @@ export default {
             if (valid) {
                this.$message.success('验证成功')
                 // 验证正确
+                // 验证是否勾选用户协议
+                if (this.loginForm.isChecked != true) {
+                  return this.$message.warning('请勾选用户协议')
+                }
+                // 验证通过
+                login({
+                  phone:this.loadingForm.phone,
+                  password:this.loadingForm.password,
+                  code:this.loadingForm.loginCode,
+                }).then(res=>{
+                  if (res.data.code===200) {
+                    this.$message.success('欢迎你')
+                    // 服务器返回了token
+                    // token 保存在 localStorage  
+                    window.localStorage.setItem('heimammToken',res.data.data.token)
+                    // 跳转到首页
+                    this.$router.push('./index')
+                  }else if(res.data.code===202){
+                    this.$message.error(res.data.message)
+                  }
+                })
             } else {
                 this.$message.error('验证失败')
                 // 验证错误
